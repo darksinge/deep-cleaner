@@ -1,0 +1,29 @@
+{
+  "name": "deep-cleaner",
+  "version": "1.0.0",
+  "description": "Delete nested key-value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "clean",
+    "strip",
+    "object",
+    "string",
+    "array",
+    "null",
+    "undefined",
+    "empty",
+    "recursive",
+    "recursively",
+    "delete",
+    "deep",
+    "deep-clean",
+    "cleaner",
+    "deep-cleaner"
+  ],
+  "git repository": "https://github.com/darksinge/deep-cleaner.git",
+  "author": "Craig Blackburn",
+  "license": "MIT"
+}
