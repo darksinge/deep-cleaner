@@ -13,12 +13,15 @@ function removeKey(obj, key) {
   return obj;
 }
 
-module.exports = removeKey;
+function clean(obj) {
+  removeKey(obj, '');
+  removeKey(obj, []);
+  removeKey(obj, {});
+  removeKey(obj, null);
+  removeKey(obj, undefined);
+  return obj;
+}
 
-// function clean(obj, removeKey) {
-//   Object.keys(obj).forEach(function(key) {
-//     (key === removeKey && obj[key].length === 0) && delete obj[key] ||
-//     (obj[key] && typeof obj[key] === 'object') && clean(obj[key], removeKey);
-//   });
-//   return obj;
-// }
+module.exports = function(obj, key) {
+  return typeof key === 'undefined' ? clean(obj) : removeKey(obj, key);
+}

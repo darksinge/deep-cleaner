@@ -1,6 +1,6 @@
 {
   "name": "deep-cleaner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Delete nested key-value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values",
   "main": "index.js",
   "scripts": {
@@ -29,9 +29,6 @@
   },
   "author": "Craig Blackburn",
   "license": "MIT",
-  "dependencies": {
-    "lodash": "^4.17.4"
-  },
   "devDependencies": {
     "mocha": "^3.2.0"
   }
