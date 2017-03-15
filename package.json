@@ -23,7 +23,10 @@
     "cleaner",
     "deep-cleaner"
   ],
-  "git repository": "https://github.com/darksinge/deep-cleaner.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darksinge/deep-cleaner.git"
+  },
   "author": "Craig Blackburn",
   "license": "MIT",
   "dependencies": {
