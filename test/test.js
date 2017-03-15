@@ -26,14 +26,7 @@ describe('index.js', function() {
             }
             
             // cleaner(obj, 'foo');
-            var removeKey = 'kill all the cats!';
-            function clean(obj) {
-                Object.keys(obj).forEach(function (key) {
-                    console.log('', obj);
-                    (key === 'kill all the cats!' && delete obj[key]) || obj[key] && typeof obj[key] === 'object' && clean(obj[key])
-                });
-                return obj;
-            }
+            cleaner(obj, 'kill all the cats!');
             
             assert.equal(undefined, obj['foo']['moreCats']['kill all the cats!']);
             
