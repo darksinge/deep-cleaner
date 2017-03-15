@@ -1,0 +1,22 @@
+{
+    "name": "dark",
+    "displayName": "Craig-K_dark",
+    "description": "",
+    "version": "0.0.1",
+    "publisher": "craigblackburn",
+    "engines": {
+        "vscode": "^1.10.0"
+    },
+    "categories": [
+        "Themes"
+    ],
+    "contributes": {
+        "themes": [
+            {
+                "label": "Craig-K (dark)",
+                "uiTheme": "vs-dark",
+                "path": "./themes/Craig-Kimbie_dark.tmTheme"
+            }
+        ]
+    }
+}
