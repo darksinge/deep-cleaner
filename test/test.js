@@ -5,29 +5,68 @@ var assert = require('assert');
 
 describe('index.js', function () {
 
-    var obj = {
-        "I'm empty!": "",
-        "I am not empty": "stuff",
-        foo: {
-            bar: "cats",
-            foo: undefined,
-            asdf: null,
-            moreCats: {
-                'kill all the cats!': "Really, you should do what he says"
-            },
-            nestedEmptyObject: {}
-        },
-        "bar": {
-            description: "I'm a nested 'bar'!",
-            message: "",
-            realMessage: "Please don't delete me..."
-        }
-    }
+
 
     describe('#removeKey()', function () {
-        it('should delete the nested key-value pair where key = "KILL_ALL_THE_CATS"', function (done) {
-            cleaner(obj, 'kill all the cats!');
-            assert.equal(undefined, obj['foo']['moreCats']['kill all the cats!']);
+        it('should delete the nested key-value pair where key = "kill all the cats!"', function (done) {
+
+            var obj_1 = {
+                "I'm empty!": "",
+                "I am not empty": "stuff",
+                foo: {
+                    bar: "cats",
+                    foo: undefined,
+                    asdf: null,
+                    moreCats: {
+                        'kill all the cats!': "Really, you should do what he says"
+                    },
+                    nestedEmptyObject: {}
+                },
+                "bar": {
+                    description: "I'm a nested 'bar'!",
+                    message: "",
+                    realMessage: "Please don't delete me..."
+                },
+                someList: [
+                    {
+                        'kill all the cats!': "cats",
+                        innocent: "don't delete"
+                    },
+                    {
+                        'kill all the cats!': "cats",
+                        innocent: "don't delete"
+                    },
+                    {
+                        'kill all the cats!': "cats",
+                        innocent: "don't delete"
+                    }
+                ]
+            }
+
+            cleaner(obj_1, 'kill all the cats!');
+            assert.equal(undefined, obj_1['foo']['moreCats']['kill all the cats!']);
+            assert.equal(undefined, obj_1['someList'][0]['kill all the cats!']);
+            assert.equal(undefined, obj_1['someList'][1]['kill all the cats!']);
+            assert.equal(undefined, obj_1['someList'][2]['kill all the cats!']);
+
+            var obj_2 = {
+                a: {
+                    b: {
+                        c: "dirty value"
+                    }
+                },
+                d: {
+                    e: {
+                        f: "dirty value"
+                    }
+                }
+            }
+
+            cleaner(obj_2, ['c', 'f']);
+
+            assert.equal(undefined, obj_2['a']['b']['c']);
+            assert.equal(undefined, obj_2['d']['e']['f']);
+
             return done();
         });
     });

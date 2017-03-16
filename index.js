@@ -29,5 +29,11 @@ function objIsEmpty(obj) {
 }
 
 module.exports = function(obj, key) {
+  if (Array.isArray(key)) {
+    for (var i = 0; i < key.length; i++) {
+      removeKey(obj, key[i]);
+    }
+    return;
+  }
   return typeof key === 'undefined' ? recursiveClean(obj) : removeKey(obj, key);
 }
