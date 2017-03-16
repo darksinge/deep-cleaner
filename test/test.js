@@ -40,18 +40,51 @@ describe('index.js', function () {
             assert.equal(obj["I'm empty!"], undefined);
             assert.equal(obj['bar']['message'], undefined);
 
-            var shouldBe = {
-                "I am not empty": "stuff",
-                foo: {
-                    bar: "cats",
+            var actual = {
+                a: {
+                    b: "b"
                 },
-                "bar": {
-                    description: "I'm a nested 'bar'!",
-                    realMessage: "Please don't delete me..."
+                c: [
+                    "one",
+                    "two",
+                    "three",
+                    "four",
+                    {}
+                ],
+                d: {},
+                e: [],
+                f: null,
+                g: undefined,
+                h: {
+                    i: "",
+                    j: null
+                },
+                k: {
+                    l: "",
+                    m: "m"
                 }
             }
 
-            // assert.equal(shouldBe, obj);
+            cleaner(actual);
+
+            var expected = {
+                a: {
+                    b: "b"
+                },
+                c: [
+                    "one",
+                    "two",
+                    "three",
+                    "four"
+                ],
+                h: {},
+                k: {
+                    m: "m"
+                }
+            }
+            console.log(JSON.stringify(actual, null, 3));
+            console.log(JSON.stringify(expected, null, 3));
+            assert.equal(actual, expected);
 
             return done();
         });

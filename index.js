@@ -13,15 +13,21 @@ function removeKey(obj, key) {
   return obj;
 }
 
-function clean(obj) {
-  removeKey(obj, '');
-  removeKey(obj, []);
-  removeKey(obj, {});
-  removeKey(obj, null);
-  removeKey(obj, undefined);
-  return obj;
+function recursiveClean(obj) {
+    Object.keys(obj).forEach(function (key) {
+      (objIsEmpty(obj[key]) && delete obj[key]) || (obj[key] && typeof obj[key] === 'object') && recursiveClean(obj[key])
+    });
+    return obj;
+  }
+
+function objIsEmpty(obj) {
+  if (typeof obj === 'undefined' || obj == null) return true;
+  if (obj === "") return true;
+  if (obj == {} || obj == []) return true; 
+  if (typeof obj != 'object') return false;
+  return Object.keys(obj).length == 0;
 }
 
 module.exports = function(obj, key) {
-  return typeof key === 'undefined' ? clean(obj) : removeKey(obj, key);
+  return typeof key === 'undefined' ? recursiveClean(obj) : removeKey(obj, key);
 }
