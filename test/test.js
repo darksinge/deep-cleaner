@@ -6,21 +6,51 @@ var assert = require('assert');
 describe('index.js', function () {
 
     var obj = {
-        "I'm empty!": "",
-        "I am not empty": "stuff",
-        foo: {
-            bar: "cats",
-            foo: undefined,
-            asdf: null,
-            moreCats: {
-                'kill all the cats!': "Really, you should do what he says"
-            },
-            nestedEmptyObject: {}
+        "A": {
+            one: "1",
+            two: "2",
+            "three": 3,
+            four: ""
         },
-        "bar": {
-            description: "I'm a nested 'bar'!",
-            message: "",
-            realMessage: "Please don't delete me..."
+        "B": "b",
+        "C": [
+            {
+                quotient: [
+                    1,
+                    2
+                ],
+                value: 0.5
+            },
+            {
+                quotient: [
+                    3,
+                    4
+                ],
+                value: 0.75
+            },
+            {
+                quotient: [
+                    1,
+                    0
+                ],
+                value: undefined
+            }
+        ],
+        "D": [],
+        "E": {
+            e: null,
+            ee: undefined,
+            eee: "",
+            eeee: {},
+            eeeef: []
+        },
+        F: {
+            f: null,
+            ff: undefined,
+            fff: "",
+            ffff: {},
+            fffff: [],
+
         }
     }
 
