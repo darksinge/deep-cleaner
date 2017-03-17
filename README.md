@@ -1,7 +1,7 @@
 # deep-cleaner
-Delete nested key-value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values
+Delete nested key-value pairs on an object with a provided key, or remove empty objects, empty strings, null, and undefined values.
 
-### Usage
+## Usage
 
 ```
 cleaner(object[, key])
@@ -9,22 +9,34 @@ cleaner(object[, key])
 #### Arguments
 object (Object): The object to clean.
 
-key (String, optional): The name of the key in a key-value pair you want to delete on the object.
+key (String)\<optional>: The name of the key of a key-value pair you want to recursively remove on `object`
 
 #### Example
 
-To clean empty values,
+To clean empty values:
 
 ```
 var cleaner = require('deep-cleaner');
 
 var obj = {
-  a: 'a',
-  b: '',
-  c: [],
-  d: {},
-  e: null,
-  f: undefined
+  aValue: 'value',
+  emptyString: '',
+  emptyArray: [],
+  emptyObject: {},
+  isNull: null,
+  isUndefined: undefined
+  multiLayeredObj: {
+    anotherValue: 'value',
+    anotherEmptyString: "",
+    anArray: [
+      {
+        noValue: null
+      },
+      {
+        hasValue: 'value'
+      }
+    ]
+  },
 }
 
 cleaner(obj);
@@ -32,7 +44,14 @@ cleaner(obj);
 console.log(obj);
 
 // {
-//   a: 'a'
+//   aValue: 'value',
+//   multiLayeredObj: {
+//      anotherValue: 'value',
+//      anArray: [
+//          {},
+//          {hasValue: 'value'}
+//      ]
+//   }
 // }
 ```
 
@@ -43,10 +62,10 @@ To recursively strip a key-value pair, pass in the name of the key as the second
 var dirtyObject = {
   a: {
     b: {
-      c: "some dirty value"
+      dirty: "value"
     }
   },
-  c: "another dirty value",
+  dirty: "value",
   some_list: [
     {
       dirty: "value",
@@ -63,7 +82,6 @@ var dirtyObject = {
   ]
 }
 
-cleaner(dirtyObject, 'c');
 cleaner(dirtyObject, 'dirty');
 
 console.log(dirtyObject);
@@ -90,17 +108,24 @@ You can also pass in an array of keys to delete, i.e.,
 
 ```
 var obj = {
-  a: 'a',
+  a: {
+    a: 'a',
+    b: 'b'
+  },
   b: 'b',
-  c: 'c'
+  c: 'c',
+  d: 'd'
 }
 
-cleaner(obj, ['a','c']);
+cleaner(obj, ['b','c']);
 
 console.log(obj);
 
 // {
-//   a: 'a'
+//   a: {
+//      a: 'a'
+//   },
+//   d: 'd'
 // }
 
 ```
