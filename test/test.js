@@ -1,90 +1,109 @@
 var cleaner = require('../index');
-var assert = require('assert');
-
-
+var expect = require('chai').expect;
+var should = require('chai').should();
 
 describe('index.js', function () {
-
-    var obj = {
-        "A": {
-            one: "1",
-            two: "2",
-            "three": 3,
-            four: ""
-        },
-        "B": "b",
-        "C": [
-            {
-                quotient: [
-                    1,
-                    2
-                ],
-                value: 0.5
-            },
-            {
-                quotient: [
-                    3,
-                    4
-                ],
-                value: 0.75
-            },
-            {
-                quotient: [
-                    1,
-                    0
-                ],
-                value: undefined
-            }
-        ],
-        "D": [],
-        "E": {
-            e: null,
-            ee: undefined,
-            eee: "",
-            eeee: {},
-            eeeef: []
-        },
-        F: {
-            f: null,
-            ff: undefined,
-            fff: "",
-            ffff: {},
-            fffff: [],
-
-        }
-    }
-
-    describe('#removeKey()', function () {
-        it('should delete the nested key-value pair where key = "KILL_ALL_THE_CATS"', function (done) {
-            cleaner(obj, 'kill all the cats!');
-            assert.equal(undefined, obj['foo']['moreCats']['kill all the cats!']);
-            return done();
-        });
-    });
-
-    describe('#clean()', function () {
-        it('should delete all empty values of an object', function (done) {
-            cleaner(obj);
-            assert.equal(obj['bar']['description'] != null, true);
-            assert.equal(obj['foo']['asdf'], undefined);
-            assert.equal(obj["I'm empty!"], undefined);
-            assert.equal(obj['bar']['message'], undefined);
-
-            var shouldBe = {
-                "I am not empty": "stuff",
-                foo: {
-                    bar: "cats",
+    describe('#deepCleaner()', function() {
+        it('should delete nested key-value pairs where key equals `dirty`', function(done) {            
+            var actual = {
+                dirty: 'value',
+                A: {
+                    dirty: 'value',
+                    clean: 'value',
+                    a: {
+                        dirty: 'value'
+                    }
                 },
-                "bar": {
-                    description: "I'm a nested 'bar'!",
-                    realMessage: "Please don't delete me..."
-                }
+                B: [
+                    {
+                        dirty: 'value',
+                        clean: 'value',
+                        a: {
+                            dirty: 'value',
+                            clean: 'value'
+                        }
+                    }
+                ]
+            }
+            
+            cleaner(actual, 'dirty');
+            expect(actual).to.deep.equal({A: {clean:'value',a:{}},B:[{clean:'value',a:{clean:'value'}}]});
+            done();
+        });
+
+        it('should delete values on an Object that are null, undefined, or an empty string, array, or object', function(done) {
+            var obj = {
+                notEmptyString: 'string',
+                emptyString: "",
+                notEmptyArray: [1, 2, 3],
+                emptyArray: [],
+                notEmptyObject: {aKey: 'a value'},
+                emptyObject: {},
+                thisIsTrue: true,
+                thisIsFalse: false,
+                thisIsNull: null,
+                thisIsUndefined: undefined,
+                not_a_number: NaN,
+                dirty: "value"
             }
 
-            // assert.equal(shouldBe, obj);
+            cleaner(obj);
 
-            return done();
+            should.exist(obj.notEmptyString);
+            should.exist(obj.notEmptyArray);
+            should.exist(obj.notEmptyObject);
+            should.exist(obj.thisIsTrue);
+            should.exist(obj.thisIsFalse);
+            should.exist(obj.not_a_number);
+            should.exist(obj.dirty);
+
+            should.not.exist(obj.emptyString);
+            should.not.exist(obj.emptyArray);
+            should.not.exist(obj.emptyObject);
+            should.not.exist(obj.thisIsNull);
+            should.not.exist(obj.thisIsUndefined);
+
+            done();
         });
-    });
 
+        it('should recursively remove keys `b`, and `c`', function(done) {
+            var actual = {
+                A: {
+                    a: "value",
+                    b: "value",
+                    c: {
+                        a: "value",
+                        b: "value",
+                        c: "value"
+                    }
+                },
+                B: [
+                    {
+                        a: "value",
+                        b: "value",
+                        c: "value"
+                    },
+                    [
+                        {
+                            a: "value",
+                            b: "value",
+                            c: "value"
+                        },
+                        {
+                            a: "value",
+                            b: "value",
+                            c: "value"
+                        }
+                    ]
+                ]
+            }
+
+            var expected = {A: {a: "value",},B: [{a: "value",},[{a: "value"},{a: "value",}]]}
+
+            cleaner(actual, ['b', 'c']);
+            expect(actual).to.deep.equal(expected);
+            done();
+        });
+
+    });
 });
