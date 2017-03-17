@@ -1,6 +1,6 @@
 {
   "name": "deep-cleaner",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Delete nested key-value pairs on an object with a provided key, or remove undefined, null and empty strings, arrays, and objects.",
   "main": "index.js",
   "scripts": {
