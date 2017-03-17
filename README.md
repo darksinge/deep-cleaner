@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/deep-cleaner.svg)](https://badge.fury.io/js/deep-cleaner)
 [![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+[![npm](https://img.shields.io/npm/v/npm.svg)]()
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 
 Delete nested key-value pairs on an object with a provided key, or remove empty objects, empty strings, null, and undefined values.
