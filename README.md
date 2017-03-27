@@ -7,6 +7,8 @@
 
 Delete nested key-value pairs on an object with a provided key, or remove empty objects, empty strings, null, and undefined values.
 
+*Note:* A current limitation of this module is it's inability to work on objects containing recursive definitions.
+
 ## Installation
 
 `npm install --save deep-cleaner`
