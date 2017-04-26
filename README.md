@@ -5,9 +5,9 @@
 [![npm](https://img.shields.io/npm/v/npm.svg)]()
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 
-Delete nested key-value pairs on an object with a provided key, or remove empty objects, empty strings, null, and undefined values.
+Light weight packge used to remove empty nested objects, empty strings, null, and undefined values, or removed nested key-value pairs on objects with a given key.
 
-*Note:* A current limitation of this module is it's inability to work on objects containing recursive definitions.
+*Note:* deep-cleaner was designed primarily with JSON in mind. It will not work on objects containing recursive definitions due to it's simplicity.
 
 ## Installation
 
