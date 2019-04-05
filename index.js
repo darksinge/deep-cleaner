@@ -55,43 +55,55 @@ var isUndefined = (arg) => toString(arg) === '[object Undefined]';
 
 /**
  * isEmptyTarget
- * @param {*} o :: unknown function argument
- * @returns {Boolean} :: returns true if `o` is a null, undefined, or an empty string, array, or object. Returns false if `o` is a not null, not undefined, or is not of type String, Array, or an Object of species `{}`.
+ * @param {*} obj :: unknown function argument
+ * @returns {Boolean} :: returns true if `obj` is a null, undefined, or an empty string, 
+ *  array, or object. Returns false if `obj` is a not null, not undefined, or is not of 
+ *  type String, Array, or an Object of species `{}`.
  */
-var isEmptyTarget = (o) => isNull(o) || isUndefined(o) || (isString(o) && o.length === 0) || (isObject(o) && Object.keys(o).length === 0);
+var isEmptyTarget = (obj) => isNull(obj) || isUndefined(obj) || (isString(obj) && obj.length === 0) || (isObject(obj) && Object.keys(obj).length === 0);
 
 /**
  * 
- * @param {Array} o :: an array being processed
- * @param {Number} i :: the index being removed from `o`
+ * @param {Array} obj :: an array being processed
+ * @param {Number} i :: the index being removed from `obj`
  */
-var removeElement = (o, i) => o.splice(1, (i - 0));
+var removeElement = (obj, i) => obj.splice(1, (i - 0));
 
 /**
  * 
- * @param {Object} o :: the object being cleaned
- * @param {String|Number} key :: the key or index to be cleaned from `o`
+ * @param {Object} obj :: the object being cleaned
+ * @param {String|Number} key :: the key or index to be cleaned from `obj`
  */
-function removeKey(o, key) {
-  isObject(o) && Object.keys(o).forEach(function (k) {
-    (k === key) && delete o[k] ||
-      (o[k] && isObject(o[k]) && removeKey(o[k], key))
+function removeKey(obj, key) {
+  isObject(obj) && Object.keys(obj).forEach(function (k) {
+    (k === key) && delete obj[k] ||
+      (obj[k] && isObject(obj[k]) && removeKey(obj[k], key))
   });
-  return o;
+  return obj;
 }
 
 /**
- * recursiveClean :: recursively removes any undefined, null, or empty strings, arrays, or objects from `o`
- * @param {Object} o :: the object to be cleaned
+ * recursiveClean :: recursively removes any undefined, null, or empty strings, arrays, or objects from `obj`
+ * @param {Object} obj :: the object to be cleaned
  */
-function recursiveClean(o) {
-  isObject(o)
-    &&
-    Object.keys(o).forEach(function (k) {
-      (isEmptyTarget(o[k]) && ((isArray(o) && removeElement(o, k)) || delete o[k])) ||
-        (o[k] && !isNaN(o[k]) && isObject(o[k]) && recursiveClean(o[k]))
-    });
-  return o;
+function recursiveClean(obj) {
+  if (!isObject(obj)) {
+    return;
+  }
+
+  Object.keys(obj).forEach(function (key) {
+    if (isEmptyTarget(obj[key])) {
+      if (isArray(obj)) {
+        removeElement(obj, key);
+      } else {
+        delete obj[key];
+      }
+    } else if (obj[key] && !isNaN(obj[key]) && isObject(obj[key])) {
+      recursiveClean(obj[key]);
+    }
+  });
+
+  return obj;
 }
 
 /**
@@ -107,8 +119,16 @@ var removeKeyLoop = (obj, keys) => { while(keys.length > 0) removeKey(obj, keys.
  * @param {Object} obj :: the object being cleaned
  * @param {String|Array} target :: A string or array of strings of key(s) for key-value pair(s) to be cleaned from `obj`
  */
-function deepCleaner(obj, target) {
-  isArray(target) ? removeKeyLoop(obj, target) : isUndefined(target) ? recursiveClean(obj) : removeKey(obj, target);
+function deepCleaner(obj, target=null) {
+
+  if (!target) {
+    // Do the default object "cleaning" if `target` is not specified.
+    recursiveClean(obj);
+  } else if (isArray(target)) {
+    removeKeyLoop(obj, target);
+  } else {
+    removeKey(obj, target);
+  }
 }
 
 module.exports = deepCleaner;
