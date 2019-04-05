@@ -75,10 +75,18 @@ var removeElement = (obj, i) => obj.splice(1, (i - 0));
  * @param {String|Number} key :: the key or index to be cleaned from `obj`
  */
 function removeKey(obj, key) {
-  isObject(obj) && Object.keys(obj).forEach(function (k) {
-    (k === key) && delete obj[k] ||
-      (obj[k] && isObject(obj[k]) && removeKey(obj[k], key))
+  if (!isObject(obj)) {
+    return;
+  }
+
+  Object.keys(obj).forEach(function (k) {
+    if (k === key) {
+      delete obj[k];
+    } else if (obj[k] && isObject(obj[k])) {
+      removeKey(obj[k], key);
+    }
   });
+  
   return obj;
 }
 
@@ -107,7 +115,7 @@ function recursiveClean(obj) {
 }
 
 /**
- * 
+ * removeKeyLoop :: does the same thing as `removeKey()` but with multiple keys.
  * @param {Object} obj :: the object being cleaned
  * @param {String|Array} keys :: an array containing keys to be cleaned from `obj`
  */
