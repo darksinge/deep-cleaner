@@ -1,7 +1,18 @@
-# deep-cleaner
+# Deep Cleaner
 Delete nested key-value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values
 
-### Usage
+## Contributing to Deep Cleaner
+Pull requests are welcome! If you notice a bug or want to add a feature, please feel free to contribute
+to this project.
+
+Here are a few guidelines you should follow.
+ - Please make new pull requests into the `development` branch. A new contribution might prompt me to make additional changes that I'd like packaged together in a single PR to `master`.
+ - Please write as much detail as necessary in your commit messages to clearly explain any changes.
+ - Changes to the code that do not have passing unit tests will not be accepted.
+ 
+ Notice a bug but don't have time to fix it? Submit an issue! I want to keep this package well maintained and squash all of it's nasty little bugs.
+
+## Usage
 
 ```
 cleaner(object[, key])
