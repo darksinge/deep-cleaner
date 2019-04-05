@@ -1,6 +1,6 @@
 # Deep Cleaner
 [![npm version](https://badge.fury.io/js/deep-cleaner.svg)](https://badge.fury.io/js/deep-cleaner)
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+[![Build Status](https://travis-ci.com/darksinge/deep-cleaner.svg?branch=master)](https://travis-ci.com/darksinge/deep-cleaner)
 [![npm](https://img.shields.io/npm/v/npm.svg)]()
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 
