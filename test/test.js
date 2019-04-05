@@ -10,6 +10,10 @@ describe('index.js', function () {
                 A: {
                     dirty: 'value',
                     clean: 'value',
+                    emptyNull: null,
+                    emptyUndefined: undefined,
+                    emptyArray: [],
+                    emptyObject: {},
                     a: {
                         dirty: 'value'
                     }
@@ -27,7 +31,20 @@ describe('index.js', function () {
             }
             
             cleaner(actual, 'dirty');
-            expect(actual).to.deep.equal({A: {clean:'value',a:{}},B:[{clean:'value',a:{clean:'value'}}]});
+            expect(actual).to.deep.equal({
+                A: {
+                    clean:'value',
+                    emptyNull: null,
+                    emptyUndefined: undefined,
+                    emptyArray: [],
+                    emptyObject: {},
+                    a:{}
+                },
+                B:[{
+                    clean:'value',
+                    a:{clean:'value'}
+                }]
+            });
             done();
         });
 
