@@ -98,7 +98,18 @@ describe('index.js', function () {
                 ]
             }
 
-            var expected = {A: {a: "value",},B: [{a: "value",},[{a: "value"},{a: "value",}]]}
+            var expected = { 
+                A: {
+                    a: "value"
+                },
+                B: [
+                        {a: "value"},
+                        [
+                            {a: "value"},
+                            {a: "value"}
+                        ]
+                    ]
+                }
 
             cleaner(actual, ['b', 'c']);
             expect(actual).to.deep.equal(expected);
