@@ -76,7 +76,7 @@ var removeElement = (obj, i) => obj.splice(1, (i - 0));
  */
 function removeKey(obj, key) {
   isObject(obj) && Object.keys(obj).forEach(function (k) {
-    (k === key || obj[k] && obj[k].length === 0) && delete obj[k] ||
+    (k === key) && delete obj[k] ||
       (obj[k] && isObject(obj[k]) && removeKey(obj[k], key))
   });
   return obj;

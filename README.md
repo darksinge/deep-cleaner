@@ -1,5 +1,16 @@
 # Deep Cleaner
-Delete nested key-value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values
+[![npm version](https://badge.fury.io/js/deep-cleaner.svg)](https://badge.fury.io/js/deep-cleaner)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+[![npm](https://img.shields.io/npm/v/npm.svg)]()
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
+
+Delete nested key-value pairs by a specified key or remove empty objects, empty strings, null, and undefined values from an object.
+
+*Note:* deep-cleaner was designed primarily with JSON in mind. It will not work on objects containing recursive definitions due to it's simplicity.
+
+## Installation
+
+`npm install --save deep-cleaner`
 
 ## Contributing to Deep Cleaner
 Pull requests are welcome! If you notice a bug or want to add a feature, please feel free to contribute
@@ -15,27 +26,40 @@ Here are a few guidelines you should follow.
 ## Usage
 
 ```
-cleaner(object[, key])
+deepCleaner(object[, key])
 ```
-#### Arguments
-object (Object): The object to clean.
+#### Arguments:
 
-key (String, optional): The name of the key in a key-value pair you want to delete on the object.
+`object` (Object): The object to clean
 
-#### Example
+`key` (String|Array)\<optional>: The key or array of keys of key-value pairs you want to recursively remove on `object`
 
-To clean empty values,
+## Examples:
+
+To remove empty values (including `undefined` and `null`) on an object:
 
 ```
 var cleaner = require('deep-cleaner');
 
 var obj = {
-  a: 'a',
-  b: '',
-  c: [],
-  d: {},
-  e: null,
-  f: undefined
+  aValue: 'value',
+  emptyString: '',
+  emptyArray: [],
+  emptyObject: {},
+  isNull: null,
+  isUndefined: undefined
+  multiLayeredObj: {
+    anotherValue: 'value',
+    anotherEmptyString: "",
+    anArray: [
+      {
+        noValue: null
+      },
+      {
+        hasValue: 'value'
+      }
+    ]
+  },
 }
 
 cleaner(obj);
@@ -43,21 +67,28 @@ cleaner(obj);
 console.log(obj);
 
 // {
-//   a: 'a'
+//   aValue: 'value',
+//   multiLayeredObj: {
+//      anotherValue: 'value',
+//      anArray: [
+//          {},
+//          {hasValue: 'value'}
+//      ]
+//   }
 // }
 ```
 
-To recursively strip a key-value pair, pass in the name of the key as the second parameter, i.e.,
+To recursively strip a key-value pair, pass in the name of the key as the second parameter:
 
 ```
    
 var dirtyObject = {
   a: {
     b: {
-      c: "some dirty value"
+      dirty: "value"
     }
   },
-  c: "another dirty value",
+  dirty: "value",
   some_list: [
     {
       dirty: "value",
@@ -74,7 +105,6 @@ var dirtyObject = {
   ]
 }
 
-cleaner(dirtyObject, 'c');
 cleaner(dirtyObject, 'dirty');
 
 console.log(dirtyObject);
@@ -101,20 +131,28 @@ You can also pass in an array of keys to delete, i.e.,
 
 ```
 var obj = {
-  a: 'a',
+  a: {
+    a: 'a',
+    b: 'b'
+  },
   b: 'b',
-  c: 'c'
+  c: 'c',
+  d: 'd'
 }
 
-cleaner(obj, ['a','c']);
+cleaner(obj, ['b','c']);
 
 console.log(obj);
 
 // {
-//   a: 'a'
+//   a: {
+//      a: 'a'
+//   },
+//   d: 'd'
 // }
 
 ```
+## Testing
 
+run `npm test`.
 
-     
