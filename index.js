@@ -1,117 +1,67 @@
 /**
-* deepCleaner.js - Delete nested key, value pairs on an object with a provided key, empty objects, empty strings, null, and undefined values
+* deepCleaner.js :: Delete nested key-value pairs by a specified key 
+*   or remove empty objects, empty strings, null, and undefined 
+*   values from an object.
 */
-
 'use strict';
 
-/**
- * toString
- * @param {*} arg :: unknown function argument
- * @returns {String} :: a string representation of `arg`
- */
-var toString = (arg) => Object.prototype.toString.call(arg);
+const utils = require('./utils');
 
 /**
- * isArray
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is an Array, false otherwise
+ * cleanCyclicObject :: Removes any undefined, null, or empty strings, arrays, or objects from `obj`.
+ *    Uses a `WeakMap` to keep track of objects that have been visited while recursively cleaning
+ *    an object to prevent infinite recursive calls.
+ * @param {Object} object :: the object to be cleaned
+ * @param {?String} target :: Optional key to remove from `object`. If not specified, the default
+ *    behavior is to remove "empty" values from `object`. A value is considered to be empty if it
+ *    is one of the following: 
+ *      - empty strings
+ *      - empty arrays
+ *      - empty objects
+ *      - values that are null
+ *      - values that are undefined
  */
-var isArray = (arg) => Array.isArray ? Array.isArray(arg) : toString(arg) === '[object Array]';
+function cleanCyclicObject(object, target=null) {
 
-/**
- * isStrictObject
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is strictly an Object (i.e. of species `{}`), false otherwise
- */
-var isStrictObject = (arg) => toString(arg) === '[object Object]';
+  const visitedObjects = new WeakMap(); // use a WeakMap to keep track of which objects have been visited
 
-/**
- * 
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is an object.
- */
-var isObject = (arg) => typeof arg === 'object';
+  function recursiveClean(obj) {
+    
+    // If `obj` is an actual object, check if it's been seen already.
+    if (utils.isObject(obj)) {
 
-/**
- * isString
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is a String, false otherwise
- */
-var isString = (arg) => toString(arg) === '[object String]';
-
-/**
- * isNull
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is of type Null, false otherwise
- */
-var isNull = (arg) => toString(arg) === '[object Null]';
-
-/**
- * isUndefined
- * @param {*} arg :: unknown function argument
- * @returns {Boolean} :: returns true if `arg` is of type Undefined, false otherwise
- */
-var isUndefined = (arg) => toString(arg) === '[object Undefined]';
-
-/**
- * isEmptyTarget
- * @param {*} obj :: unknown function argument
- * @returns {Boolean} :: returns true if `obj` is a null, undefined, or an empty string, 
- *  array, or object. Returns false if `obj` is a not null, not undefined, or is not of 
- *  type String, Array, or an Object of species `{}`.
- */
-var isEmptyTarget = (obj) => isNull(obj) || isUndefined(obj) || (isString(obj) && obj.length === 0) || (isObject(obj) && Object.keys(obj).length === 0);
-
-/**
- * 
- * @param {Array} obj :: an array being processed
- * @param {Number} i :: the index being removed from `obj`
- */
-var removeElement = (obj, i) => obj.splice(1, (i - 0));
-
-/**
- * 
- * @param {Object} obj :: the object being cleaned
- * @param {String|Number} key :: the key or index to be cleaned from `obj`
- */
-function removeKey(obj, key) {
-  if (!isObject(obj)) {
-    return;
-  }
-
-  Object.keys(obj).forEach(function (k) {
-    if (k === key) {
-      delete obj[k];
-    } else if (obj[k] && isObject(obj[k])) {
-      removeKey(obj[k], key);
-    }
-  });
-  
-  return obj;
-}
-
-/**
- * recursiveClean :: recursively removes any undefined, null, or empty strings, arrays, or objects from `obj`
- * @param {Object} obj :: the object to be cleaned
- */
-function recursiveClean(obj) {
-  if (!isObject(obj)) {
-    return;
-  }
-
-  Object.keys(obj).forEach(function (key) {
-    if (isEmptyTarget(obj[key])) {
-      if (isArray(obj)) {
-        removeElement(obj, key);
-      } else {
-        delete obj[key];
+      // If we've seen this object already, return to stop infinite loops
+      if (visitedObjects.has(obj)) {
+        return;
       }
-    } else if (obj[key] && !isNaN(obj[key]) && isObject(obj[key])) {
-      recursiveClean(obj[key]);
-    }
-  });
 
-  return obj;
+      // If we haven't seen this object yet, add it to the list of visited objects.
+      // Since 'obj' itself is used as the key, the value of 'objects[obj]' is 
+      // irrelevent. I just went with using 'null'.
+      visitedObjects.set(obj, null);
+
+      for (var key in obj) {
+
+        if (
+          (target && key === target)              // Check if 'key' is the target to delete,
+          || (!target && utils.isEmpty(obj[key])) // or if 'target' is unspecified but the object is "empty"
+        ) {
+          delete obj[key];
+        } else {
+          recursiveClean(obj[key]);
+        }
+      }
+
+
+    // If 'obj' is an array, check it's elements for objects to clean up.
+    } else if (utils.isArray(obj)) {
+      for (var i in obj) {
+        recursiveClean(obj[i]);
+      }
+    }
+  }
+
+  recursiveClean(object);
 }
 
 /**
@@ -119,24 +69,27 @@ function recursiveClean(obj) {
  * @param {Object} obj :: the object being cleaned
  * @param {String|Array} keys :: an array containing keys to be cleaned from `obj`
  */
-var removeKeyLoop = (obj, keys) => { while(keys.length > 0) removeKey(obj, keys.pop()); }
+function removeKeyLoop(obj, keys) {
+  for (var key of keys) {
+    cleanCyclicObject(obj, key);
+  }
+}
 
 /**
  * deepCleaner
  * 
  * @param {Object} obj :: the object being cleaned
- * @param {String|Array} target :: A string or array of strings of key(s) for key-value pair(s) to be cleaned from `obj`
+ * @param {?String|?Array} target :: A string or array of strings of key(s) for key-value pair(s) to be cleaned from `obj`
  */
-function deepCleaner(obj, target=null) {
+function deepCleaner(obj, target = null) {
 
-  if (!target) {
-    // Do the default object "cleaning" if `target` is not specified.
-    recursiveClean(obj);
-  } else if (isArray(target)) {
+  if (utils.isArray(target)) {
     removeKeyLoop(obj, target);
   } else {
-    removeKey(obj, target);
+    cleanCyclicObject(obj, target);
   }
+
+  return obj;
 }
 
 module.exports = deepCleaner;
