@@ -88,7 +88,7 @@ You can also pass in an array of keys.
 { a: { a: 'foo' }, d: 'grault' }
 ```
 
-As of v1.3, `deep-cleaner` also works on objects with circular references!
+As of v1.2.0, `deep-cleaner` also works on objects with circular references!
 ```
 > var foo = { bar: null, baz: '' };
 > foo.bar = foo;
