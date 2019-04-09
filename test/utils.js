@@ -128,4 +128,17 @@ describe('utils.js', function () {
 
     });
 
+    describe('#repr()', function() {
+        it('should get the verbose string representation of an object', function(done) {
+            expect(utils.repr({})).to.equal('[object Object]');
+            expect(utils.repr([])).to.equal('[object Array]');
+            expect(utils.repr('asdf')).to.equal('[object String]');
+            expect(utils.repr(999)).to.equal('[object Number]');
+            expect(utils.repr(null)).to.equal('[object Null]');
+            expect(utils.repr(undefined)).to.equal('[object Undefined]');
+
+            done();
+        });
+    });
+
 });

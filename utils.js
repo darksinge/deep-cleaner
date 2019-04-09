@@ -75,15 +75,7 @@ module.exports = {
      * @returns {Boolean} :: Returns true if `arg` is of type Undefined, false otherwise
      */
     isUndefined: function(arg) {
-        try {
-            return typeof(arg) === 'undefined';
-        } catch (e) {
-            if (e instanceof ReferenceError) {
-                return true;
-            }
-
-            throw e;
-        }
+        return this.repr(arg) === '[object Undefined]';
     },
 
     /**
