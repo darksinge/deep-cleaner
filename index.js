@@ -50,13 +50,26 @@ function cleanCyclicObject(object, target=null) {
         } else {
           recursiveClean(obj[key]);
         }
+
+        if (!target && utils.isEmpty(obj[key])) {
+          delete obj[key];
+        }
+
       }
 
 
     // If 'obj' is an array, check it's elements for objects to clean up.
     } else if (utils.isArray(obj)) {
-      for (var i in obj) {
+      var i = 0;
+      while (i < obj.length) {
         recursiveClean(obj[i]);
+
+        if (!target && utils.isEmpty(obj[i])) {
+          obj.splice(i, 1);
+        } else {
+          i++;
+        }
+
       }
     }
   }

@@ -13,8 +13,11 @@ describe('index.js', function () {
                 emptyString: "",
                 notEmptyArray: [1, 2, 3],
                 emptyArray: [],
+                arrayWithEmptyObjects: [{}, '', null, undefined, []],
+                arrayWithMixedObjects: [{}, {a: 'a'}, '', 'foo', null, true, undefined, false, [], [1, 2, 3]],
                 notEmptyObject: {aKey: 'a value'},
                 emptyObject: {},
+                objectWithEmptyObject: { aReallyEmptyObject: {} },
                 thisIsTrue: true,
                 thisIsFalse: false,
                 thisIsNull: null,
@@ -32,7 +35,11 @@ describe('index.js', function () {
             should.exist(obj.thisIsFalse);
             should.exist(obj.not_a_number);
             should.exist(obj.dirty);
-
+            should.exist(obj.arrayWithMixedObjects);
+            expect(obj.arrayWithMixedObjects).to.eql([{a: 'a'}, 'foo', true, false, [1, 2, 3]])
+            
+            should.not.exist(obj.objectWithEmptyObject);
+            should.not.exist(obj.arrayWithEmptyObjects);
             should.not.exist(obj.emptyString);
             should.not.exist(obj.emptyArray);
             should.not.exist(obj.emptyObject);
@@ -69,7 +76,7 @@ describe('index.js', function () {
             }
             
             cleaner(actual, 'dirty');
-            expect(actual).to.deep.equal({
+            expect(actual).to.eql({
                 A: {
                     clean:'value',
                     emptyNull: null,
@@ -132,7 +139,7 @@ describe('index.js', function () {
             }
 
             cleaner(actual, ['b', 'c']);
-            expect(actual).to.deep.equal(expected);
+            expect(actual).to.eql(expected);
             done();
         });
 
@@ -163,7 +170,7 @@ describe('index.js', function () {
             expected.baz.anotherRecursion = expected;
 
             cleaner(actual);
-            expect(actual).to.deep.equal(expected);
+            expect(actual).to.eql(expected);
             done();
         });
 
@@ -173,7 +180,7 @@ describe('index.js', function () {
             };
 
             cleaner(actual, 'recursiveDefinition');
-            expect(actual).to.deep.equal({});
+            expect(actual).to.eql({});
             done();
         });
 
@@ -201,7 +208,19 @@ describe('index.js', function () {
             expected.grault.plugh = expected;
 
             cleaner(actual, ['foo', 'baz', 'recursiveDefinition']);
-            expect(actual).to.deep.equal(expected);
+            expect(actual).to.eql(expected);
+            done();
+        });
+
+        it('should be an empty object', function(done) {
+            var actual = {
+                foo: null
+            };
+
+            actual.foo = actual;
+
+            cleaner(actual,  'foo');
+            expect(actual).to.eql({});
             done();
         });
 

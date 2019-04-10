@@ -3,7 +3,7 @@
  */
 'use strict';
 
-module.exports = {
+const utils = {
 
     /**
      * repr :: gets the string representation of `arg`
@@ -97,3 +97,5 @@ module.exports = {
     },
 
 };
+
+module.exports = utils;
