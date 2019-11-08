@@ -49,6 +49,8 @@ function cleanCyclicObject(object, target=null) {
           delete obj[key];
         } else {
           recursiveClean(obj[key]);
+          if (utils.isEmpty(obj[key]))
+            delete obj[key];
         }
       }
 
@@ -58,6 +60,13 @@ function cleanCyclicObject(object, target=null) {
       for (var i in obj) {
         recursiveClean(obj[i]);
       }
+      var cleanup=[]
+      for (var i in obj) {
+        if (utils.isEmpty(obj[i]))
+          cleanup.push(i)
+      }
+      for (var i in cleanup)
+        delete obj[cleanup[i]]
     }
   }
 
