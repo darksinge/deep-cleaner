@@ -37,7 +37,7 @@ describe('index.js', function () {
             should.exist(obj.dirty);
             should.exist(obj.arrayWithMixedObjects);
             expect(obj.arrayWithMixedObjects).to.eql([{a: 'a'}, 'foo', true, false, [1, 2, 3]])
-            
+
             should.not.exist(obj.objectWithEmptyObject);
             should.not.exist(obj.arrayWithEmptyObjects);
             should.not.exist(obj.emptyString);
@@ -49,7 +49,7 @@ describe('index.js', function () {
             done();
         });
 
-        it('should delete nested key-value pairs where key equals `dirty`', function(done) {            
+        it('should delete nested key-value pairs where key equals `dirty`', function(done) {
             var actual = {
                 dirty: 'value',
                 A: {
@@ -74,7 +74,7 @@ describe('index.js', function () {
                     }
                 ]
             }
-            
+
             cleaner(actual, 'dirty');
             expect(actual).to.eql({
                 A: {
@@ -125,7 +125,7 @@ describe('index.js', function () {
                 ]
             }
 
-            var expected = { 
+            var expected = {
                 A: {
                     a: "value"
                 },
@@ -158,7 +158,7 @@ describe('index.js', function () {
             }
             actual.recursiveDefinition = actual;
             actual.baz.anotherRecursion = actual;
-            
+
             let expected = {
                 recursiveDefinition: null,
                 bar: [1,2,3],
