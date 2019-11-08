@@ -61,6 +61,18 @@ describe('index.js', function () {
         done();
     });
 
+    it('should clean recursive for arrays', function(done) {
+      var actual = [
+          {a: {b: {c : {}}}}
+      ]
+      var expected = [
+      ]
+
+      cleaner(actual);
+      expect(actual).to.deep.equal(expected);
+      done();
+    });
+
         it('should delete nested key-value pairs where key equals `dirty`', function(done) {
             var actual = {
                 dirty: 'value',
