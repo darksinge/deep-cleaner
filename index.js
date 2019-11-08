@@ -1,6 +1,6 @@
 /**
-* deepCleaner.js :: Delete nested key-value pairs by a specified key 
-*   or remove empty objects, empty strings, null, and undefined 
+* deepCleaner.js :: Delete nested key-value pairs by a specified key
+*   or remove empty objects, empty strings, null, and undefined
 *   values from an object.
 */
 'use strict';
@@ -14,7 +14,7 @@ const utils = require('./utils');
  * @param {Object} object :: the object to be cleaned
  * @param {?String} target :: Optional key to remove from `object`. If not specified, the default
  *    behavior is to remove "empty" values from `object`. A value is considered to be empty if it
- *    is one of the following: 
+ *    is one of the following:
  *      - empty strings
  *      - empty arrays
  *      - empty objects
@@ -26,7 +26,7 @@ function cleanCyclicObject(object, target=null) {
   const visitedObjects = new WeakMap(); // use a WeakMap to keep track of which objects have been visited
 
   function recursiveClean(obj) {
-    
+
     // If `obj` is an actual object, check if it's been seen already.
     if (utils.isObject(obj)) {
 
@@ -36,7 +36,7 @@ function cleanCyclicObject(object, target=null) {
       }
 
       // If we haven't seen this object yet, add it to the list of visited objects.
-      // Since 'obj' itself is used as the key, the value of 'objects[obj]' is 
+      // Since 'obj' itself is used as the key, the value of 'objects[obj]' is
       // irrelevent. I just went with using 'null'.
       visitedObjects.set(obj, null);
 
@@ -77,7 +77,7 @@ function removeKeyLoop(obj, keys) {
 
 /**
  * deepCleaner
- * 
+ *
  * @param {Object} obj :: the object being cleaned
  * @param {?String|?Array} target :: A string or array of strings of key(s) for key-value pair(s) to be cleaned from `obj`
  */

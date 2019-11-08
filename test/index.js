@@ -42,7 +42,7 @@ describe('index.js', function () {
             done();
         });
 
-        it('should delete nested key-value pairs where key equals `dirty`', function(done) {            
+        it('should delete nested key-value pairs where key equals `dirty`', function(done) {
             var actual = {
                 dirty: 'value',
                 A: {
@@ -67,7 +67,7 @@ describe('index.js', function () {
                     }
                 ]
             }
-            
+
             cleaner(actual, 'dirty');
             expect(actual).to.deep.equal({
                 A: {
@@ -118,7 +118,7 @@ describe('index.js', function () {
                 ]
             }
 
-            var expected = { 
+            var expected = {
                 A: {
                     a: "value"
                 },
@@ -151,7 +151,7 @@ describe('index.js', function () {
             }
             actual.recursiveDefinition = actual;
             actual.baz.anotherRecursion = actual;
-            
+
             let expected = {
                 recursiveDefinition: null,
                 bar: [1,2,3],
