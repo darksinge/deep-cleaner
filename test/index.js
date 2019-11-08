@@ -49,6 +49,18 @@ describe('index.js', function () {
             done();
         });
 
+      it('should clean recursive', function(done) {
+        var actual = {
+            a: {b: {c : {}}}
+        }
+        var expected = {
+        }
+
+        cleaner(actual);
+        expect(actual).to.deep.equal(expected);
+        done();
+    });
+
         it('should delete nested key-value pairs where key equals `dirty`', function(done) {
             var actual = {
                 dirty: 'value',
@@ -79,11 +91,6 @@ describe('index.js', function () {
             expect(actual).to.eql({
                 A: {
                     clean:'value',
-                    emptyNull: null,
-                    emptyUndefined: undefined,
-                    emptyArray: [],
-                    emptyObject: {},
-                    a:{}
                 },
                 B:[{
                     clean:'value',
@@ -202,7 +209,7 @@ describe('index.js', function () {
             actual.grault.plugh = actual;
 
             var expected = {
-                bar: [1, 2, 3, null],
+                bar: [1, 2, 3],
                 grault: { plugh: null }
             }
             expected.grault.plugh = expected;
