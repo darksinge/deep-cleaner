@@ -1,4 +1,4 @@
-const cleaner = require('../index')
+const { cleaner } = require('../index')
 
 describe('index.js', () => {
   describe('#deepCleaner()', () => {
@@ -211,11 +211,3 @@ describe('index.js', () => {
     })
   })
 })
-
-const obj = {
-  a: {
-    dirty:'toclean'
-  }
-}
-
-clean(obj,'dirty')

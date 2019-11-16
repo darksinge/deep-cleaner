@@ -12,7 +12,7 @@ const utils = require('./utils')
  *    Uses a `WeakMap` to keep track of objects that have been visited while recursively cleaning
  *    an object to prevent infinite recursive calls.
  * @param {Object} object The object to be cleaned
- * @param {String=} target Optional key to remove from `object`. If not specified, the default
+ * @param {String} [target=null] Optional key to remove from `object`. If not specified, the default
  *    behavior is to remove "empty" values from `object`. A value is considered to be empty if it
  *    is one of the following:
  *      - empty strings
@@ -71,25 +71,14 @@ const cleanCyclicObject = (object, target = null) => {
 }
 
 /**
- * Does the same thing as `removeKey()` but with multiple keys.
- * @param {Object} obj  the object being cleaned
- * @param {String|Array} keys  an array containing keys to be cleaned from `obj`
- */
-const removeKeyLoop = (obj, keys) => {
-  for (const key of keys) {
-    cleanCyclicObject(obj, key)
-  }
-}
-
-/**
- * deepCleaner
- *
  * @param {Object} obj The object being cleaned
  * @param {String|Array} [target=null] A string or array of strings of key(s) for key-value pair(s) to be cleaned from `obj`
  */
-const deepCleaner = (obj, target = null) => {
+const cleaner = (obj, target = null) => {
   if (utils.isArray(target)) {
-    removeKeyLoop(obj, target)
+    for (const key of target) {
+      cleanCyclicObject(obj, key)
+    }
   } else {
     cleanCyclicObject(obj, target)
   }
@@ -97,4 +86,6 @@ const deepCleaner = (obj, target = null) => {
   return obj
 }
 
-module.exports = deepCleaner
+module.exports = {
+  cleaner
+}

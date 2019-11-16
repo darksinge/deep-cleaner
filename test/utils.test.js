@@ -18,7 +18,6 @@ describe('utils.js', () => {
   describe('#isObject()', () => {
     it('should return true', () => {
       expect(utils.isObject({})).toBe(true)
-      
     })
 
     it('should return false', () => {
@@ -89,24 +88,6 @@ describe('utils.js', () => {
       expect(utils.isEmpty({ foo: 'bar' })).toBe(false)
       expect(utils.isEmpty('a non-empty string')).toBe(false)
       expect(utils.isEmpty(['a', 'non', 'empty', 'array'])).toBe(false)
-    })
-  })
-
-  describe('#isTruthyish()', () => {
-    it('should return true', () => {
-      expect(utils.isTruthyish(true)).toBe(true)
-      expect(utils.isTruthyish('')).toBe(true)
-      expect(utils.isTruthyish('asdf')).toBe(true)
-      expect(utils.isTruthyish([])).toBe(true)
-      expect(utils.isTruthyish({})).toBe(true)
-      expect(utils.isTruthyish(0)).toBe(true)
-      expect(utils.isTruthyish(9999)).toBe(true)
-    })
-
-    it('should return false', () => {
-      expect(utils.isTruthyish(null)).toBe(false)
-      expect(utils.isTruthyish(undefined)).toBe(false)
-      expect(utils.isTruthyish(false)).toBe(false)
     })
   })
 
