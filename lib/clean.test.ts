@@ -192,5 +192,46 @@ describe('clean.ts', () => {
       expect(actual).to.deep.equal(expected)
       done()
     })
+
+    it('should skip deleting empty values', (done) => {
+      const actual = {
+        dirty: 'value',
+        A: {
+          dirty: 'value',
+          clean: 'value',
+          thisIsNull: null,
+          thisIsUndefined: undefined,
+          emptyArray: [],
+          emptyObject: {},
+        },
+        B: [
+          {
+            dirty: 'value',
+            clean: 'value',
+            thisIsNull: null,
+            thisIsFalse: false,
+          },
+        ],
+      }
+
+      cleanBy(actual, 'dirty', { skipEmpty: true })
+      expect(actual).to.deep.equal({
+        A: {
+          clean: 'value',
+          thisIsNull: null,
+          thisIsUndefined: undefined,
+          emptyArray: [],
+          emptyObject: {},
+        },
+        B: [
+          {
+            clean: 'value',
+            thisIsNull: null,
+            thisIsFalse: false,
+          },
+        ],
+      })
+      done()
+    })
   })
 })
