@@ -233,5 +233,24 @@ describe('clean.ts', () => {
       })
       done()
     })
+
+    it('should not modify original object', (done) => {
+      const original = {
+        dirty: 'value',
+        clean: 'value',
+      }
+
+      const clone = cleanBy(original, 'dirty', { clone: true })
+
+      expect(original === clone).to.be.false
+      expect(original).to.deep.equal({
+        dirty: 'value',
+        clean: 'value',
+      })
+      expect(clone).to.deep.equal({
+        clean: 'value',
+      })
+      done()
+    })
   })
 })
