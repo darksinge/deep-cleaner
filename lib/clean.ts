@@ -1,6 +1,8 @@
-import { isArray, isPlainObject, isEmpty, cloneDeep } from 'lodash'
+import { isArray, isPlainObject, cloneDeep } from 'lodash'
+import { isEmptyLike } from './utils'
 
 type Cleanable<T> = T | Array<Cleanable<T>>
+type KeyLike = string | symbol | number
 
 export interface CleanOptions {
   /**
@@ -37,29 +39,42 @@ export interface CleanOptions {
 }
 
 const recursiveClean = (
-  obj: any,
-  visited: WeakSet<any>,
+  root: any,
+  visited: WeakSet<object>,
   skipEmpty: boolean,
-  target?: string,
+  target?: KeyLike,
 ): void => {
-  if (visited.has(obj)) {
+  if (visited.has(root)) {
     return void 0
   }
-  visited.add(obj)
 
-  if (isPlainObject(obj)) {
-    for (const key in obj) {
-      const shouldDelete = target == null ? isEmpty(obj[key]) : key === target
-      if (shouldDelete) {
-        delete obj[key]
+  if (isPlainObject(root)) {
+    visited.add(root)
+    for (const key in root) {
+      const empty = !skipEmpty && isEmptyLike(root[key])
+      if (target === key || empty) {
+        delete root[key]
         continue
       }
 
-      recursiveClean(obj[key], visited, skipEmpty, target)
+      recursiveClean(root[key], visited, skipEmpty, target)
     }
-  } else if (isArray(obj)) {
-    for (const i in obj) {
-      recursiveClean(obj[i], visited, skipEmpty, target)
+  } else if (isArray(root)) {
+    visited.add(root)
+    for (const child of root) {
+      recursiveClean(child, visited, skipEmpty, target)
+    }
+  } else {
+    return void 0
+  }
+
+  // preform an extra pass over to check if the root object became empty after
+  // cleaning it's children
+  if (!skipEmpty && isPlainObject(root)) {
+    for (const key in root) {
+      if (isEmptyLike(root[key])) {
+        delete root[key]
+      }
     }
   }
 
@@ -67,31 +82,31 @@ const recursiveClean = (
 }
 
 export function cleanBy<T>(
-  obj: Cleanable<T>,
-  targets: string | string[],
+  value: Cleanable<T>,
+  targets: KeyLike | KeyLike[],
   options?: CleanOptions,
 ): Cleanable<Partial<T>> {
-  if (typeof targets === 'string') {
+  if (!isArray(targets)) {
     targets = [targets]
   }
 
   if (options?.clone) {
-    obj = cloneDeep(obj)
+    value = cloneDeep(value)
   }
 
   const skipEmpty = !!options?.skipEmpty
-  for (const t of targets) {
-    recursiveClean(obj, new WeakSet(), skipEmpty, t)
+  for (const target of targets) {
+    recursiveClean(value, new WeakSet(), skipEmpty, target)
   }
 
-  return obj
+  return value
 }
 
-export function clean<T>(obj: Cleanable<T>, options?: CleanOptions) {
+export function clean<T>(value: Cleanable<T>, options?: CleanOptions) {
   if (options?.clone) {
-    obj = cloneDeep(obj)
+    value = cloneDeep(value)
   }
 
   const skipEmpty = !!options?.skipEmpty
-  return recursiveClean(obj, new WeakSet(), skipEmpty)
+  return recursiveClean(value, new WeakSet(), skipEmpty)
 }
