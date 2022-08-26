@@ -2,7 +2,7 @@
   "name": "deep-cleaner",
   "version": "2.0.0-alpha",
   "description": "Recursively remove deeply nested properties and/or falsey values (excluding 0), empty objects, and empty arrays.",
-  "main": "index.js",
+  "main": "dist/lib/index.js",
   "scripts": {
     "test": "mocha -r ts-node/register './lib/**/*.test.ts'",
     "build": "tsc"
@@ -34,6 +34,7 @@
     "@types/chai": "^4.3.3",
     "@types/lodash": "^4.14.184",
     "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.13",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "chai": "^3.5.0",
