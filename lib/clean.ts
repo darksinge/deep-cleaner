@@ -1,8 +1,8 @@
 import { isArray, isPlainObject, cloneDeep } from 'lodash'
+import type { PartialDeep } from 'type-fest'
 import { isEmptyLike } from './utils'
 
-type Cleanable<T> = T | Array<Cleanable<T>>
-type KeyLike = string | symbol | number
+type DeepPartial<T> = PartialDeep<T, { recurseIntoArrays: false }>
 
 export interface CleanOptions {
   /**
@@ -42,7 +42,7 @@ const recursiveClean = (
   root: any,
   visited: WeakSet<object>,
   skipEmpty: boolean,
-  target?: KeyLike,
+  target?: string,
 ): void => {
   if (visited.has(root)) {
     return void 0
@@ -82,10 +82,10 @@ const recursiveClean = (
 }
 
 export function cleanBy<T>(
-  value: Cleanable<T>,
-  targets: KeyLike | KeyLike[],
+  value: T,
+  targets: string | string[],
   options?: CleanOptions,
-): Cleanable<Partial<T>> {
+): DeepPartial<T> {
   if (!isArray(targets)) {
     targets = [targets]
   }
@@ -99,14 +99,15 @@ export function cleanBy<T>(
     recursiveClean(value, new WeakSet(), skipEmpty, target)
   }
 
-  return value
+  return value as DeepPartial<T>
 }
 
-export function clean<T>(value: Cleanable<T>, options?: CleanOptions) {
+export function clean<T>(value: T, options?: CleanOptions): DeepPartial<T> {
   if (options?.clone) {
     value = cloneDeep(value)
   }
 
   const skipEmpty = !!options?.skipEmpty
-  return recursiveClean(value, new WeakSet(), skipEmpty)
+  recursiveClean(value, new WeakSet(), skipEmpty)
+  return value as DeepPartial<T>
 }
